@@ -1,0 +1,7 @@
+/* Used by style=class: a container class that sets display, as app styles commonly do.
+   It competes with the UA rule [hidden] { display: none } — and wins unless the theme
+   or app re-declares [hidden] with !important. */
+.panel-flex {
+    display: flex;
+    gap: 4px;
+}
