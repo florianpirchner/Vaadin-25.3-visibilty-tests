@@ -7,6 +7,37 @@ A ChatGPT conversation reasoned about this without running anything. This projec
 
 The raw output of the run below is in [`results-2026-10-08.tsv`](results-2026-10-08.tsv).
 
+## Summary
+
+**Not reproducible with this sample — in none of the three versions.** That shows `setVisible()` on
+containers works as such; it does not show the reported application is fine. The trigger in that
+application is something this sample does not have yet.
+
+**32 test cases per version × 3 versions (25.2.3, 25.3.0, 25.3.1) = 96 runs, all green.**
+
+| Group | Varied | Cases |
+|---|---|---|
+| The setup from the conversation | container type (`Div`, `VerticalLayout`, `HorizontalLayout`, `FormLayout`) × `setVisible(false)` before/after `add()` × roundtrip via button/text field | 16 |
+| What each roundtrip does | `Div`/`VerticalLayout` × rebuild the containers / remove and re-add the same instances / `setVisible(true)` then `false` again | 6 |
+| CSS and delayed hiding | `Div`/`VerticalLayout` × invisible from the start or only after being rendered visible × `display:flex` via class or inline style | 10 |
+
+Each case checks five points in time — the initial render and after each of four roundtrips — and at
+each one checks all four panels individually: `hidden` attribute present, **and** the element actually
+not rendered. The reported pattern (wrong, right, wrong, right) would fail at the very first step.
+
+**Not covered yet** — and very likely where the trigger is:
+
+- custom components or Lit templates
+- visibility via `bindVisible`, Binder or signals
+- `@Push`
+- `executeJs` on these elements
+- application CSS for `[hidden]`
+- containers inside a shadow DOM
+- `Grid` / `VirtualList`
+
+Next step: add the reporting application's real container code as one more variant. Only a red test
+is worth an issue against `vaadin/flow`.
+
 ## Stack
 
 Spring Boot 4.1.1 · Java 25 · Vaadin 25.2.3 / 25.3.0 / 25.3.1 (switched with `-Dvaadin.version`) ·
